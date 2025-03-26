@@ -1,0 +1,130 @@
+{
+  "rules": {
+    "typescript": {
+      "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "strictBindCallApply": true,
+      "strictPropertyInitialization": true,
+      "noImplicitThis": true,
+      "useUnknownInCatchVariables": true,
+      "alwaysStrict": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "exactOptionalPropertyTypes": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+      "noUncheckedIndexedAccess": true,
+      "noImplicitOverride": true,
+      "allowUnusedLabels": false,
+      "allowUnreachableCode": false
+    },
+    "react": {
+      "componentNaming": {
+        "pattern": "^[A-Z][a-zA-Z0-9]*$",
+        "message": "Component names must be PascalCase"
+      },
+      "propsNaming": {
+        "pattern": "^[a-z][a-zA-Z0-9]*$",
+        "message": "Prop names must be camelCase"
+      },
+      "hooksNaming": {
+        "pattern": "^use[A-Z][a-zA-Z0-9]*$",
+        "message": "Hook names must start with 'use' and be PascalCase"
+      }
+    },
+    "fileStructure": {
+      "componentFiles": {
+        "pattern": "^[a-z][a-z0-9-]*\\.tsx$",
+        "message": "Component files must be kebab-case.tsx"
+      },
+      "directoryNaming": {
+        "pattern": "^[a-z][a-z0-9-]*$",
+        "message": "Directory names must be kebab-case"
+      }
+    },
+    "imports": {
+      "order": [
+        "react",
+        "react-native",
+        "expo",
+        "@/*",
+        "external-libraries",
+        "relative-imports"
+      ],
+      "grouping": {
+        "separator": "newline",
+        "order": "asc"
+      }
+    },
+    "styling": {
+      "useStyleSheet": true,
+      "preferFlexbox": true,
+      "responsiveDesign": true,
+      "darkModeSupport": true
+    },
+    "performance": {
+      "memoization": {
+        "useMemo": true,
+        "useCallback": true,
+        "React.memo": true
+      },
+      "lazyLoading": true,
+      "imageOptimization": true
+    },
+    "testing": {
+      "componentTests": true,
+      "integrationTests": true,
+      "snapshotTests": true
+    },
+    "security": {
+      "secureStorage": true,
+      "inputSanitization": true,
+      "httpsOnly": true
+    },
+    "accessibility": {
+      "ariaRoles": true,
+      "semanticElements": true,
+      "colorContrast": true
+    },
+    "stateManagement": {
+      "preferContext": true,
+      "useReducer": true,
+      "globalState": "context"
+    },
+    "errorHandling": {
+      "validation": "zod",
+      "errorBoundaries": true,
+      "logging": true
+    },
+    "navigation": {
+      "useExpoRouter": true,
+      "deepLinking": true,
+      "typeSafety": true
+    },
+    "internationalization": {
+      "i18n": true,
+      "rtlSupport": true,
+      "localization": true
+    }
+  },
+  "ignore": [
+    "node_modules",
+    "dist",
+    "build",
+    ".expo",
+    "coverage",
+    "*.test.ts",
+    "*.test.tsx"
+  ],
+  "formatter": {
+    "prettier": true,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false
+  }
+} 
