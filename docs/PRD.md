@@ -25,21 +25,44 @@ mysticMind is a mobile application that allows users to record, analyze, and tra
 
 ## 2. User Scenarios
 
-### 2.1 Guest User Flow
+### 2.1 Authentication Approach (MVP Focus)
+1. **Guest User Access**
+   - Users can access the app without registration
+   - Experience core dream journaling functionality
+   - Data stored locally on device
+   - Option to register later and preserve data
+
+2. **User Registration Requirements**
+   - Required fields:
+     - First name
+     - Last name
+     - Date of birth
+     - Gender (using predefined enum gender_type)
+     - Email address
+     - Username
+     - Password (minimum 8 characters, at least one uppercase, one lowercase, one number)
+   - Email verification required
+   - No social login options (Google, Apple) in MVP
+
+3. **Login Options**
+   - Email and password login only
+   - Password reset functionality
+
+### 2.2 Guest User Flow
 1. User opens app without registration
 2. Can immediately start recording dreams
 3. Access AI interpretation features
 4. Data stored locally
 5. Option to register later
 
-### 2.2 Registered User Flow
-1. Email registration/login
+### 2.3 Registered User Flow
+1. Email registration with required personal info
 2. Full access to all features
 3. Cloud sync of dream entries
 4. Cross-device access
 5. Profile customization
 
-### 2.3 Core User Journeys
+### 2.4 Core User Journeys
 1. **Dream Recording**
    - Open app
    - Navigate to dream entry
@@ -86,8 +109,8 @@ mysticMind is a mobile application that allows users to record, analyze, and tra
 
 ### 4.1 Authentication Screens
 - Welcome Screen
-- Login Screen
-- Registration Screen
+- Login Screen (email only)
+- Registration Screen (with required fields)
 - Forgot Password Screen
 
 ### 4.2 Main App Screens
@@ -105,9 +128,15 @@ mysticMind is a mobile application that allows users to record, analyze, and tra
 users (
   id: uuid PRIMARY KEY,
   email: string UNIQUE,
+  username: string UNIQUE,
+  first_name: string,
+  last_name: string,
+  birth_date: date,
+  gender: gender_type ENUM,
   created_at: timestamp,
   updated_at: timestamp,
   preferences: jsonb
+  /* Note: Password is stored in auth.users table managed by Supabase Auth */
 )
 ```
 
@@ -141,8 +170,8 @@ tags (
 ## 6. API Requirements
 
 ### 6.1 Authentication APIs
-- Register
-- Login
+- Register (with required personal info)
+- Login (email only)
 - Logout
 - Password Reset
 - Email Verification
@@ -170,7 +199,8 @@ tags (
 ### 7.1 MVP Features (Phase 1)
 - [x] Basic dream entry
 - [x] Guest user support
-- [x] Email authentication
+- [x] Email-only authentication
+- [x] Required registration fields (name, DOB, gender, email, username, password)
 - [x] Basic AI interpretation
 - [x] Dream archive
 - [x] Dark mode
@@ -183,23 +213,25 @@ tags (
 - [ ] Social features
 - [ ] Premium features
 - [ ] PWA support
+- [ ] Social login options (Google, Apple)
 
 ## 8. MVP Definition & Roadmap
 
 ### 8.1 MVP Scope
 - Core dream journaling functionality
 - Basic AI interpretation
-- Guest and registered user support
+- Guest and registered user support (email only)
 - Essential UI/UX features
 - Basic offline support
+- Required user registration fields (including username, password, and gender as enum)
 
 ### 8.2 Development Phases
 
 #### Phase 1: Foundation (Weeks 1-4)
 - Project setup
 - Basic UI components
-- Authentication flow
-- Database structure
+- Authentication flow (Guest & Email)
+- Database structure with required user fields
 
 #### Phase 2: Core Features (Weeks 5-8)
 - Dream entry functionality

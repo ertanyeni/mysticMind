@@ -10,10 +10,18 @@ begin
 end;
 $$ language plpgsql;
 
+-- Create gender type enum
+create type public.gender_type as enum ('male', 'female', 'other', 'prefer_not_to_say');
+
 -- Users table
 create table public.users (
   id uuid references auth.users on delete cascade primary key,
   email text unique not null,
+  username varchar unique,
+  first_name varchar,
+  last_name varchar,
+  birth_date date,
+  gender gender_type,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
   preferences jsonb

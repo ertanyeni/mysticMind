@@ -1,42 +1,45 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { QueryProvider } from '../providers/QueryProvider';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { Session } from '@supabase/supabase-js';
+import { ActivityIndicator, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthProvider, useAuth } from '../providers/AuthProvider';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { QueryProvider } from '@/providers/QueryProvider';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
+// Create a wrapper component that depends on AuthProvider
+function RootLayoutNav() {
+  const { session, isGuestMode, isLoading } = useAuth();
+  
+  // Show loading indicator while checking authentication
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#6c63ff" />
+      </View>
+    );
   }
 
+  // Determine initial route based on authentication status
+  const initialRoute = session || isGuestMode ? '(tabs)' : '(auth)';
+
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName={initialRoute}
+    />
+  );
+}
+
+// Root layout that provides context providers
+export default function RootLayout() {
   return (
     <QueryProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <AuthProvider>
+        <RootLayoutNav />
+      </AuthProvider>
     </QueryProvider>
   );
 }
