@@ -172,7 +172,6 @@ export default function RegisterScreen() {
                   <Picker
                     selectedValue={gender}
                     onValueChange={(itemValue: string) => setGender(itemValue)}
-                    style={styles.picker}
                   >
                     <Picker.Item label="Select Gender" value="" />
                     <Picker.Item label="Male" value="male" />

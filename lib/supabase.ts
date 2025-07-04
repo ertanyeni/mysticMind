@@ -16,4 +16,27 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     detectSessionInUrl: false,
   },
+  global: {
+    fetch: async (url, options = {}) => {
+      console.log('Fetching URL:', url);
+      const timeout = 30000; // 30 saniye
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+      
+      try {
+        const response = await fetch(url, {
+          ...options,
+          signal: controller.signal,
+        });
+        console.log('Fetch response status:', response.status);
+        return response;
+      } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    },
+  },
+  debug: true,
 }); 
