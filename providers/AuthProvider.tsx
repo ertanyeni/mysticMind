@@ -9,6 +9,7 @@ type AuthContextType = {
   user: User | null;
   session: Session | null;
   isGuestMode: boolean;
+  guestName: string | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (
@@ -24,6 +25,7 @@ type AuthContextType = {
   ) => Promise<void>;
   signOut: () => Promise<void>;
   continueAsGuest: () => Promise<void>;
+  setGuestName: (name: string) => Promise<void>;
 };
 
 // Create auth context
@@ -34,6 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isGuestMode, setIsGuestMode] = useState(false);
+  const [guestName, setGuestNameState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Initialize auth state
@@ -59,6 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         checkGuestMode();
       } else {
         setIsGuestMode(false);
+        setGuestNameState(null);
         setIsLoading(false);
       }
     });
@@ -70,7 +74,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const checkGuestMode = async () => {
     try {
       const guestModeEnabled = await AsyncStorage.getItem('isGuestMode');
+      const storedGuestName = await AsyncStorage.getItem('guestName');
+      
       setIsGuestMode(guestModeEnabled === 'true');
+      setGuestNameState(storedGuestName);
     } catch (error) {
       console.error('Error checking guest mode:', error);
     } finally {
@@ -154,7 +161,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setIsLoading(true);
       await AsyncStorage.removeItem('isGuestMode');
+      await AsyncStorage.removeItem('guestName');
       setIsGuestMode(false);
+      setGuestNameState(null);
       await supabase.auth.signOut();
     } catch (error: any) {
       Alert.alert('Error signing out', error.message);
@@ -176,17 +185,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Set guest name
+  const setGuestName = async (name: string) => {
+    try {
+      if (name.trim()) {
+        await AsyncStorage.setItem('guestName', name.trim());
+        setGuestNameState(name.trim());
+      } else {
+        await AsyncStorage.removeItem('guestName');
+        setGuestNameState(null);
+      }
+    } catch (error: any) {
+      console.error('Error setting guest name:', error);
+      Alert.alert('Error', 'Failed to save guest name');
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         session,
         isGuestMode,
+        guestName,
         isLoading,
         signIn,
         signUp,
         signOut,
         continueAsGuest,
+        setGuestName,
       }}
     >
       {children}
